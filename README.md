@@ -1,4 +1,4 @@
-# firstcodingjob
+# FirstCodingJob
 
 A new Flutter project.
 
