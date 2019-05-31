@@ -1,128 +1,177 @@
-import '../models/lesson.dart';
+import 'package:firstcodingjob/components/search/videoheader.dart';
 import 'package:flutter/material.dart';
+import '../models/video.dart';
+import './../components/search/videolist.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-class DetailPage extends StatelessWidget {
-  final Lesson lesson;
-  DetailPage({Key key, this.lesson}) : super(key: key);
+class DetailPage extends StatefulWidget {
+  final Video lesson;
+  final List<String> links = [
+    "iMEhjsiHbwM",
+    "vZPOiMzUBCE",
+    "aJOTlE1K90k",
+    "pRpeEdMmmQ0",
+    "GXoErccq0vw",
+    "iMEhjsiHbwM",
+    "vZPOiMzUBCE",
+    "aJOTlE1K90k",
+    "pRpeEdMmmQ0",
+    "GXoErccq0vw"
+  ];
+  DetailPage({
+    Key key,
+    @required this.lesson,
+  }) : super(key: key);
+
+  @override
+  _DetailPageState createState() => _DetailPageState();
+}
+
+class _DetailPageState extends State<DetailPage>
+    with SingleTickerProviderStateMixin {
+  TabController controller;
+  ScrollController _scrollViewController;
+  @override
+  void initState() {
+    super.initState();
+    controller = new TabController(length: 2, vsync: this);
+    _scrollViewController = new ScrollController();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
-    final levelIndicator = Container(
-      child: Container(
-        child: LinearProgressIndicator(
-            backgroundColor: Color.fromRGBO(209, 224, 224, 0.2),
-            value: lesson.indicatorValue,
-            valueColor: AlwaysStoppedAnimation(Colors.green)),
-      ),
-    );
+    return Container(
+        color: Colors.white, child: _buildScaffoldContent(context));
+  }
 
-    final coursePrice = Container(
-      padding: const EdgeInsets.all(7.0),
-      decoration: new BoxDecoration(
-          border: new Border.all(color: Colors.white),
-          borderRadius: BorderRadius.circular(5.0)),
-      child: new Text(
-        "\$" + lesson.price.toString(),
-        style: TextStyle(color: Colors.white),
-      ),
-    );
+  Widget _buildScaffoldContent(BuildContext context) {
+    return SafeArea(
+        child: Scaffold(
+            body: NestedScrollView(
+                reverse: false,
+                controller: _scrollViewController,
+                headerSliverBuilder:
+                    (BuildContext context, bool innerBoxIsScrolled) {
+                  return <Widget>[
+                    SliverAppBar(
+                      expandedHeight: 240,
+                      primary: true,
+                      floating: innerBoxIsScrolled,
+                      pinned: false,
+                      forceElevated: innerBoxIsScrolled,
+                      flexibleSpace: _buildSliverAppBarContent(),
+                    ),
+                    SliverPersistentHeader(
+                      floating: false,
+                      pinned: true,
+                      delegate: _SliverAppBarDelegate(
+                        TabBar(
+                            controller: controller,
+                            indicatorWeight: 2.0,
+                            labelStyle: TextStyle(
+                                fontWeight: FontWeight.bold, fontSize: 13.0),
+                            indicatorColor: Colors.red,
+                            labelColor: Colors.red,
+                            unselectedLabelColor: Colors.grey,
+                            tabs: [
+                              Tab(text: 'Details'),
+                              Tab(text: 'Comments'),
+                            ]),
+                      ),
+                    ),
+                  ];
+                },
+                body: TabBarView(
+                  controller: controller,
+                  children: <Widget>[
+                    DetailsTab(widget: widget),
+                    Center(child: Padding(padding:EdgeInsets.all(16.00),child: Text("Comments comes here,layout seems great,only betterment was to split it into tabs so that user not have to scroll too much to put comment")),)
+                  ],
+                ))));
+  }
 
-    final topContentText = Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        SizedBox(height: 30.0),
-        Icon(
-          Icons.directions_car,
-          color: Colors.white,
-          size: 40.0,
-        ),    
-        Container(
-          width: 90.0,
-          child: new Divider(color: Colors.green),
-        ),
-        SizedBox(height: 5.0),
-        Text(
-          lesson.title,
-          style: TextStyle(color: Colors.white, fontSize: 45.0,fontFamily: "Raleway", fontStyle: FontStyle.normal),
-        ),
-        SizedBox(height: 30.0),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: <Widget>[
-            Expanded(flex: 2, child: levelIndicator),
-            Expanded(
-                flex: 4,
-                child: Padding(
-                    padding: EdgeInsets.only(left: 10.0),
-                    child: Text(
-                      lesson.level,
-                      style: TextStyle(color: Colors.white),
-                    ))),
-            Expanded(flex: 2, child: coursePrice)
-          ],
-        ),
-      ],
-    );
-
-    final topContent = Stack(
-      children: <Widget>[
-        Container(
-            padding: EdgeInsets.only(left: 10.0),
-            height: MediaQuery.of(context).size.height * 0.5,
-            decoration: new BoxDecoration(
-              image: new DecorationImage(
-                image: new NetworkImage("http://blog.mass.gov/wp-content/uploads/2013/10/drive-steering-wheel.jpg"),
-                fit: BoxFit.cover,
+  FlexibleSpaceBar _buildSliverAppBarContent() {
+    return FlexibleSpaceBar(
+      background: Stack(
+        fit: StackFit.expand,
+        children: <Widget>[
+          Image.network(
+            widget.lesson.link,
+            fit: BoxFit.cover,
+          ),
+          Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.bottomCenter,
+                end: Alignment.topCenter,
+                stops: [0.15, 0.5],
+                colors: [
+                  Colors.black.withOpacity(0.7),
+                  Colors.transparent,
+                ],
               ),
-            )),
-        Container(
-          // height: MediaQuery.of(context).size.height * 0.5,
-          padding: EdgeInsets.all(40.0),
-          width: MediaQuery.of(context).size.width,
-          decoration: BoxDecoration(color: Color.fromRGBO(58, 66, 86, .9)),
-          child: Center(
-            child: topContentText,
+            ),
           ),
-        ),
-        Positioned(
-          left: 8.0,
-          top: 60.0,
-          child: InkWell(
-            onTap: () {
-              Navigator.pop(context);
-            },
-            child: Icon(Icons.arrow_back, color: Colors.white),
-          ),
-        )
-      ],
-    );
+          
+          Icon(
+              FontAwesomeIcons.youtube,
+              color: Colors.red,
+              size: 48.00,
+            ),
+        Positioned(bottom: 0.0,child: Container(height:20.00,color:Colors.red[400].withOpacity(0.7),width: MediaQuery.of(context).size.width,child: Center(child:Text("Auto Looping feature can be added in player",style: TextStyle(color: Colors.white,fontSize: 12.00)),),)),
+     
+    
 
-    final bottomContentText = Text(
-      lesson.content,
-      style: TextStyle(fontSize: 18.0),
-    );
-    final readButton = Container(
-        padding: EdgeInsets.symmetric(vertical: 16.0),
-        width: MediaQuery.of(context).size.width,
-        child: RaisedButton(
-          onPressed: () => {},
-          color: Color.fromRGBO(58, 66, 86, 1.0),
-          child:
-              Text("TAKE THIS LESSON", style: TextStyle(color: Colors.white)),
-        ));
-    final bottomContent = Container(
-      width: MediaQuery.of(context).size.width,
-      padding: EdgeInsets.all(40.0),
-      child: Center(
-        child: Column(
-          children: <Widget>[bottomContentText, readButton],
-        ),
+        ],
       ),
     );
+  }
+}
 
-    return Scaffold(
-      body: SingleChildScrollView(child: Column(
-        children: <Widget>[topContent, bottomContent],
-      )),
+class DetailsTab extends StatelessWidget {
+  const DetailsTab({
+    Key key,
+    @required this.widget,
+  }) : super(key: key);
+
+  final DetailPage widget;
+
+  @override
+  Widget build(BuildContext context) {
+    return VideoList(
+        videoHeader: VideoHeader(
+            title: widget.lesson.title, subtitle: widget.lesson.title),
+        links: widget.links);
+  }
+}
+
+class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
+  _SliverAppBarDelegate(this._tabBar);
+
+  final TabBar _tabBar;
+
+  @override
+  double get minExtent => _tabBar.preferredSize.height;
+
+  @override
+  double get maxExtent => _tabBar.preferredSize.height;
+
+  @override
+  Widget build(
+      BuildContext context, double shrinkOffset, bool overlapsContent) {
+    return new Container(
+      color: Colors.white,
+      child: _tabBar,
     );
+  }
+
+  @override
+  bool shouldRebuild(_SliverAppBarDelegate oldDelegate) {
+    return false;
   }
 }

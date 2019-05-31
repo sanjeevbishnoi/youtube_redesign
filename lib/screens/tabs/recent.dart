@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:cached_network_image/cached_network_image.dart';
-
 import '../../blocs/post/bloc.dart';
 import '../../models/post.dart';
 import '../detail_page.dart';
-import '../../models/lesson.dart';
+import '../../models/video.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -130,55 +128,7 @@ class PostWidget extends StatelessWidget {
   }
 }
 
-class SimplePost extends StatelessWidget {
-  const SimplePost({
-    Key key,
-    @required this.post,
-  }) : super(key: key);
 
-  final Post post;
-
-  @override
-  Widget build(BuildContext context) {
-    return  Container(
-            decoration: BoxDecoration(color: Colors.white),
-            child: ListTile(
-              onTap: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => DetailPage(
-                            lesson: Lesson(
-                                title: "Introduction to Driving",
-                                level: "Beginner",
-                                indicatorValue: 0.33,
-                                price: 20,
-                                content:
-                                    "Start by taking a couple of minutes to read the info in this section. Launch your app and click on the Settings menu.  While on the settings page, click the Save button.  You should see a circular progress indicator display in the middle of the page and the user interface elements cannot be clicked due to the modal barrier that is constructed."))));
-              },
-              title: Text(
-                post.title,
-                style: TextStyle(
-                    fontWeight: FontWeight.w600,
-                    color: Colors.black,
-                    fontSize: 16.00,
-                    fontFamily: "roboto"),
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-              ),
-              subtitle: Text(post.body,
-                  style: TextStyle(
-                      color: Colors.blueGrey,
-                      fontWeight: FontWeight.w300,
-                      fontSize: 12.00,
-                      fontFamily: "roboto")),
-              trailing: Icon(
-                Icons.chevron_right,
-                color: Colors.black,
-              ),
-            ));
-  }
-}
 
 class VideoPost extends StatelessWidget {
   const VideoPost({
@@ -195,7 +145,17 @@ class VideoPost extends StatelessWidget {
     return  Container(
             decoration: BoxDecoration(color: Colors.white),
             child: GestureDetector(
-                onTap: () {},
+                 onTap: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => DetailPage(
+                            lesson: Video(
+                                title: post.title,
+                                desc: post.title,
+                                link: imageUrl
+                                ))));
+              },
                 child: Column(children: <Widget>[
                   
                       Container(

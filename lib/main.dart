@@ -1,9 +1,9 @@
-import 'package:firstcodingjob/pages/tabs/news.dart';
+import 'package:firstcodingjob/screens/tabs/search.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import './common/ui/app_page.dart';
 import 'screens/tabs/recent.dart';
-import 'pages/tabs/profile.dart';
+import 'screens/tabs/profile.dart';
 import './components/fab_bottom_app_bar.dart';
 import './components/layout.dart';
 import './components/slide_route.dart';
@@ -118,6 +118,14 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin{
           ],
         ),
         actions: <Widget>[
+          
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 12.0),
+            child: Icon(
+              Icons.search,
+              color: Colors.black54,
+            ),
+          ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 12.0),
             child: Icon(
@@ -125,10 +133,11 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin{
               color: Colors.black54,
             ),
           ),
+
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 12.0),
             child: Icon(
-              Icons.search,
+              Icons.do_not_disturb_off,
               color: Colors.black54,
             ),
           ),
